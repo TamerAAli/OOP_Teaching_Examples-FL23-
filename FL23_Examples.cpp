@@ -1427,9 +1427,6 @@ namespace Lec13
 				: numerator(num), denominator(denom)
 			{}
 
-			Fraction(int num) : Fraction(num, 1)
-			{}
-
 			Fraction& operator=(const Fraction& rhs)
 			{
 				numerator = rhs.numerator;
@@ -1437,80 +1434,22 @@ namespace Lec13
 				return *this;
 			}
 
-			Fraction operator+(const Fraction& rhs)
+			void displayFraction() const
 			{
-				int newNumerator = this->numerator * rhs.denominator
-					+ this->denominator * rhs.numerator;
-				int newDinomenator = this->denominator * rhs.denominator;
-
-				return Fraction(newNumerator, newDinomenator);
+				cout << numerator << " / " << denominator << endl;
 			}
-
-			Fraction operator+(const int& rhs)
-			{
-				int newNumerator = this->numerator
-					+ this->denominator * rhs;
-				int newDinomenator = this->denominator;
-
-				return Fraction(newNumerator, newDinomenator);
-			}
-			Fraction operator*(const int& rhs)
-			{
-				int newNumerator = this->numerator
-					+ this->denominator * rhs;
-				int newDinomenator = this->denominator;
-
-				return Fraction(newNumerator, newDinomenator);
-			}
-
-			operator double() const
-			{
-				return (double)numerator / denominator;
-			}
-
-			friend Fraction operator+(const int& lhs, const Fraction& rhs);
-			friend ostream& operator<<(ostream& cout, const Fraction& rhs);
 
 		private:
 			int numerator = 0;
 			int denominator = 1;
 		};
 
-		void displayFraction(const Fraction& f)
-		{
-			cout << f << endl;
-		}
-
-		Fraction operator+(const int& lhs, const Fraction& rhs)
-		{
-			int newNumerator = lhs * rhs.denominator
-				+ rhs.numerator;
-			int newDinomenator = rhs.denominator;
-
-			return Fraction(newNumerator, newDinomenator);
-		}
-
-		ostream& operator<<(ostream& cout, const Fraction& rhs)
-		{
-			cout << rhs.numerator << " / " << rhs.denominator;
-			return cout;
-		}
-
 		int main()
 		{
-			Fraction f1(1, 3);
-			Fraction f2(2, 5);
+			Fraction f1(1, 2);
+			Fraction f2(3, 4);
 
-			Fraction f3 = f1;
-			f3 = f1 + f2;
-			f1 = f1 + 7;
-			f1 = 5 + f2;
-
-			displayFraction(f1);
-			displayFraction((Fraction)5);
-
-			cout << 3 * f1;
-
+			f1.displayFraction();
 
 			return 0;
 		}
