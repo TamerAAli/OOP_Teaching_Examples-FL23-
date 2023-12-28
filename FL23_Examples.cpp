@@ -1427,6 +1427,8 @@ namespace Lec13
 				: numerator(num), denominator(denom)
 			{}
 
+			explicit Fraction (int num) : Fraction(num, 1) {}
+
 			Fraction& operator=(const Fraction& rhs)
 			{
 				numerator = rhs.numerator;
@@ -1434,9 +1436,27 @@ namespace Lec13
 				return *this;
 			}
 
-			void displayFraction() const
+			Fraction operator+(const Fraction& other) const
 			{
-				cout << numerator << " / " << denominator << endl;
+				int newNumerator = this->numerator * other.denominator
+					+ this->denominator * other.numerator;
+				int newDinomenator = this->denominator * other.denominator;
+
+				return Fraction(newNumerator, newDinomenator);
+			}
+
+			Fraction operator+(const int& other) const
+			{
+				Fraction f(other, 1);
+				return this->operator+(f);
+			}
+
+			friend Fraction operator+(const int& lhs, const Fraction& rhs);
+			friend ostream& operator<<(ostream& cout, const Fraction& rhs);
+
+			explicit operator double()
+			{
+				return (double)numerator / denominator;
 			}
 
 		private:
@@ -1444,12 +1464,37 @@ namespace Lec13
 			int denominator = 1;
 		};
 
+		void displayFraction(Fraction f)
+		{
+			cout << f << endl;
+		}
+
+		Fraction operator+(const int& lhs, const Fraction& rhs)
+		{
+			int newNumerator = lhs * rhs.denominator + rhs.numerator;
+			int newDinomenator = rhs.denominator;
+
+			return Fraction(newNumerator, newDinomenator);
+		}
+
+		ostream& operator<<(ostream& cout, const Fraction& rhs)
+		{
+			cout << rhs.numerator << " / " << rhs.denominator;
+			return cout;
+		}
+
 		int main()
 		{
 			Fraction f1(1, 2);
 			Fraction f2(3, 4);
+			Fraction f3 = (Fraction)2;
 
-			f1.displayFraction();
+			f2 = f1 + f3;
+			f2 = f1 + 4;
+			f2 = 3 + f1;
+
+			displayFraction(f2);
+			displayFraction((Fraction)20);
 
 			return 0;
 		}
