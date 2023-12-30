@@ -1117,392 +1117,397 @@ namespace past
 
 	} // namespace Lec12
 
-}; // namespace past
-
-namespace Lec13
-{
-	namespace Ex1
+	namespace Lec13
 	{
-		class GeometricObject
+		namespace Ex1
 		{
-		public:
-			virtual double getArea() const = 0;
-			virtual double getPerimeter() const = 0;
-		};
-
-		class Circle : public GeometricObject
-		{
-		private:
-			double radius = 1;
-		public:
-			virtual double getArea() const override
+			class GeometricObject
 			{
-				return radius * radius * 3.14;
-			}
-			virtual double getPerimeter() const override
-			{
-				return 2 * 3.14 * radius;
-			}
-			Circle(double radius) : radius(radius) {}
-			double getRadius() const { return radius; }
-			double getDiameter() const { return 2 * radius; }
-		};
-
-		class Rectangle : public GeometricObject
-		{
-		private:
-			double width = 1;
-			double height = 1;
-		public:
-			virtual double getArea() const override
-			{
-				return height * width;
-			}
-			virtual double getPerimeter() const override
-			{
-				return 2 * (height + width);
-			}
-			Rectangle(double width, double height)
-				: height(height), width(width)
-			{}
-			double getWidth() const { return width; }
-			double getHeight() const { return height; }
-		};
-
-		void displayGeometricObject(const GeometricObject* g)
-		{
-			const Circle* ptrC = dynamic_cast<const Circle*>(g);
-			const Rectangle* ptrR = dynamic_cast<const Rectangle*>(g);
-
-			if (ptrC)
-			{
-				cout << "The radius is " << ptrC->getRadius() << endl;
-				cout << "The diameter is " << ptrC->getDiameter() << endl;
-			}
-			if (ptrR != nullptr)
-			{
-				cout << "The width is " << ptrR->getWidth() << endl;
-				cout << "The height is " << ptrR->getHeight() << endl;
-			}
-			if (g != NULL)
-			{
-				cout << "The area is " << g->getArea() << endl;
-				cout << "The perimeter is " << g->getPerimeter() << endl;
-			}
-
-		}
-
-		int main()
-		{
-			GeometricObject* geometricObjectList[] =
-			{
-				new Rectangle(3,4),
-				new Rectangle(6,8),
-				new Circle(5),
-				new Circle(9)
+			public:
+				virtual double getArea() const = 0;
+				virtual double getPerimeter() const = 0;
 			};
 
-			for (int i = 0; i < 4; i++)
+			class Circle : public GeometricObject
 			{
-				displayGeometricObject(geometricObjectList[i]);
-				cout << string(20, '-') << endl;
+			private:
+				double radius = 1;
+			public:
+				virtual double getArea() const override
+				{
+					return radius * radius * 3.14;
+				}
+				virtual double getPerimeter() const override
+				{
+					return 2 * 3.14 * radius;
+				}
+				Circle(double radius) : radius(radius) {}
+				double getRadius() const { return radius; }
+				double getDiameter() const { return 2 * radius; }
+			};
+
+			class Rectangle : public GeometricObject
+			{
+			private:
+				double width = 1;
+				double height = 1;
+			public:
+				virtual double getArea() const override
+				{
+					return height * width;
+				}
+				virtual double getPerimeter() const override
+				{
+					return 2 * (height + width);
+				}
+				Rectangle(double width, double height)
+					: height(height), width(width)
+				{}
+				double getWidth() const { return width; }
+				double getHeight() const { return height; }
+			};
+
+			void displayGeometricObject(const GeometricObject* g)
+			{
+				const Circle* ptrC = dynamic_cast<const Circle*>(g);
+				const Rectangle* ptrR = dynamic_cast<const Rectangle*>(g);
+
+				if (ptrC)
+				{
+					cout << "The radius is " << ptrC->getRadius() << endl;
+					cout << "The diameter is " << ptrC->getDiameter() << endl;
+				}
+				if (ptrR != nullptr)
+				{
+					cout << "The width is " << ptrR->getWidth() << endl;
+					cout << "The height is " << ptrR->getHeight() << endl;
+				}
+				if (g != NULL)
+				{
+					cout << "The area is " << g->getArea() << endl;
+					cout << "The perimeter is " << g->getPerimeter() << endl;
+				}
+
 			}
 
-			return 0;
-		}
-	} // namespace Ex1
-
-	namespace Ex2
-	{
-		class MyClass
-		{
-		public:
-			int data = 10;
-			void dangerousMethod()
+			int main()
 			{
-				doSomeOtherWorkThatNeedsBigAmuontOfMemory();
-				delete this;
-				doSomeOtherWorkThatNeedsBigAmuontOfMemory();
-			}
+				GeometricObject* geometricObjectList[] =
+				{
+					new Rectangle(3,4),
+					new Rectangle(6,8),
+					new Circle(5),
+					new Circle(9)
+				};
 
-			int anotherMethod()
+				for (int i = 0; i < 4; i++)
+				{
+					displayGeometricObject(geometricObjectList[i]);
+					cout << string(20, '-') << endl;
+				}
+
+				return 0;
+			}
+		} // namespace Ex1
+
+		namespace Ex2
+		{
+			class MyClass
 			{
-				doSomeOtherWorkThatNeedsBigAmuontOfMemory();
-				cout << "This is unsafe if called after dangerousMethod!" << endl;
-				doSomeOtherWorkThatNeedsBigAmuontOfMemory();
-				return data;
-			}
-		};
+			public:
+				int data = 10;
+				void dangerousMethod()
+				{
+					doSomeOtherWorkThatNeedsBigAmuontOfMemory();
+					delete this;
+					doSomeOtherWorkThatNeedsBigAmuontOfMemory();
+				}
 
-		int main()
-		{
-			MyClass* myObject = new MyClass;
-			myObject->dangerousMethod();
-			cout << myObject->anotherMethod() << endl;
+				int anotherMethod()
+				{
+					doSomeOtherWorkThatNeedsBigAmuontOfMemory();
+					cout << "This is unsafe if called after dangerousMethod!" << endl;
+					doSomeOtherWorkThatNeedsBigAmuontOfMemory();
+					return data;
+				}
+			};
 
-			delete myObject;
-
-			MyClass myObject2;
-			myObject2.dangerousMethod();
-			cout << myObject2.anotherMethod() << endl;
-
-			return 0;
-		}
-	} // namespace Ex2
-
-	namespace Ex3
-	{
-		class Fraction
-		{
-		public:
-			Fraction(int num, int denom);
-			Fraction(int num);
-			Fraction(const Fraction& other);
-			Fraction& operator=(const Fraction& other);
-			Fraction& operator=(const int& other);
-			Fraction operator+(const Fraction& other) const;
-			Fraction operator+(const int& other) const;
-			friend Fraction operator+(const int& lhs, const Fraction& rhs);
-			friend ostream& operator<<(ostream& cout, const Fraction& rhs);
-
-			double convertToDecimal() const
+			int main()
 			{
-				return double(numerator) / denominator;
+				MyClass* myObject = new MyClass;
+				myObject->dangerousMethod();
+				cout << myObject->anotherMethod() << endl;
+
+				delete myObject;
+
+				MyClass myObject2;
+				myObject2.dangerousMethod();
+				cout << myObject2.anotherMethod() << endl;
+
+				return 0;
 			}
+		} // namespace Ex2
 
-			operator double() const { return (double)numerator / denominator; }
-
-		private:
-			int numerator = 0;
-			int denominator = 1;
-		};
-
-		Fraction::Fraction(int num, int denom)
-			: numerator(num), denominator(denom) {}
-
-		Fraction::Fraction(int num) : Fraction(num, 1) {}
-
-		Fraction::Fraction(const Fraction& other)
+		namespace Ex3
 		{
-			this->numerator = other.numerator;
-			this->denominator = other.denominator;
-		}
+			class Fraction
+			{
+			public:
+				Fraction(int num, int denom);
+				Fraction(int num);
+				Fraction(const Fraction& other);
+				Fraction& operator=(const Fraction& other);
+				Fraction& operator=(const int& other);
+				Fraction operator+(const Fraction& other) const;
+				Fraction operator+(const int& other) const;
+				friend Fraction operator+(const int& lhs, const Fraction& rhs);
+				friend ostream& operator<<(ostream& cout, const Fraction& rhs);
 
-		Fraction& Fraction::operator=(const Fraction& other)
-		{
-			if (this != &other)
+				double convertToDecimal() const
+				{
+					return double(numerator) / denominator;
+				}
+
+				operator double() const { return (double)numerator / denominator; }
+
+			private:
+				int numerator = 0;
+				int denominator = 1;
+			};
+
+			Fraction::Fraction(int num, int denom)
+				: numerator(num), denominator(denom) {}
+
+			Fraction::Fraction(int num) : Fraction(num, 1) {}
+
+			Fraction::Fraction(const Fraction& other)
 			{
 				this->numerator = other.numerator;
 				this->denominator = other.denominator;
 			}
-			return *this;
-		}
 
-		Fraction& Fraction::operator=(const int& other)
-		{
-			numerator = other;
-			denominator = 1;
-			return *this;
-		}
-
-		Fraction Fraction::operator+(const Fraction& other) const
-		{
-			int newNumerator = numerator * other.denominator
-				+ other.numerator * denominator;
-			int newDenominator = denominator * other.denominator;
-
-			return Fraction(newNumerator, newDenominator);
-		}
-
-		Fraction Fraction::operator+(const int& other) const
-		{
-			int newNumerator = numerator
-				+ other * denominator;
-			int newDenominator = denominator;
-
-			return Fraction(newNumerator, newDenominator);
-		}
-
-		Fraction operator+(const int& lhs, const Fraction& rhs)
-		{
-			int newNumerator = lhs * rhs.denominator
-				+ rhs.numerator;
-			int newDenominator = rhs.denominator;
-
-			return Fraction(newNumerator, newDenominator);
-		}
-
-		ostream& operator<<(ostream& cout, const Fraction& rhs)
-		{
-			cout << rhs.numerator << " / " << rhs.denominator;
-			return cout;
-		}
-
-		void displayFraction(const Fraction& f)
-		{
-			cout << f << endl;
-		}
-
-		int main()
-		{
-			Fraction f1(1, 2);
-			cout << f1 << endl;
-
-			Fraction f2(2, 3);
-			cout << f2 << endl;
-
-			Fraction f3(3, 4);
-			cout << f3 << endl;
-
-			f1 = f2 = f3;
-			cout << f1 << endl;
-
-			f1 = f2;
-			cout << f1 << endl;
-
-			f1 = 1;
-			cout << f1 << endl;
-
-			Fraction f4 = f2 + f3;
-			cout << f4 << endl;
-
-			Fraction f5 = f2 + 5;
-			cout << f5 << endl;
-
-			Fraction f6 = 10 + f2;
-			cout << (double)f6 << endl;
-			cout << f6 << endl;
-
-			double d = f6;
-			cout << d << endl;
-
-			displayFraction(f6);
-			displayFraction(2);
-
-			return 0;
-		}
-	} // namespace Ex3
-
-	namespace freeExPrep
-	{
-		class Fraction
-		{
-		public:
-			Fraction(int num, int denom)
-				: numerator(num), denominator(denom)
-			{}
-
-			Fraction& operator=(const Fraction& rhs)
+			Fraction& Fraction::operator=(const Fraction& other)
 			{
-				numerator = rhs.numerator;
-				denominator = rhs.denominator;
+				if (this != &other)
+				{
+					this->numerator = other.numerator;
+					this->denominator = other.denominator;
+				}
 				return *this;
 			}
+
+			Fraction& Fraction::operator=(const int& other)
+			{
+				numerator = other;
+				denominator = 1;
+				return *this;
+			}
+
+			Fraction Fraction::operator+(const Fraction& other) const
+			{
+				int newNumerator = numerator * other.denominator
+					+ other.numerator * denominator;
+				int newDenominator = denominator * other.denominator;
+
+				return Fraction(newNumerator, newDenominator);
+			}
+
+			Fraction Fraction::operator+(const int& other) const
+			{
+				int newNumerator = numerator
+					+ other * denominator;
+				int newDenominator = denominator;
+
+				return Fraction(newNumerator, newDenominator);
+			}
+
+			Fraction operator+(const int& lhs, const Fraction& rhs)
+			{
+				int newNumerator = lhs * rhs.denominator
+					+ rhs.numerator;
+				int newDenominator = rhs.denominator;
+
+				return Fraction(newNumerator, newDenominator);
+			}
+
+			ostream& operator<<(ostream& cout, const Fraction& rhs)
+			{
+				cout << rhs.numerator << " / " << rhs.denominator;
+				return cout;
+			}
+
+			void displayFraction(const Fraction& f)
+			{
+				cout << f << endl;
+			}
+
+			int main()
+			{
+				Fraction f1(1, 2);
+				cout << f1 << endl;
+
+				Fraction f2(2, 3);
+				cout << f2 << endl;
+
+				Fraction f3(3, 4);
+				cout << f3 << endl;
+
+				f1 = f2 = f3;
+				cout << f1 << endl;
+
+				f1 = f2;
+				cout << f1 << endl;
+
+				f1 = 1;
+				cout << f1 << endl;
+
+				Fraction f4 = f2 + f3;
+				cout << f4 << endl;
+
+				Fraction f5 = f2 + 5;
+				cout << f5 << endl;
+
+				Fraction f6 = 10 + f2;
+				cout << (double)f6 << endl;
+				cout << f6 << endl;
+
+				double d = f6;
+				cout << d << endl;
+
+				displayFraction(f6);
+				displayFraction(2);
+
+				return 0;
+			}
+		} // namespace Ex3
+
+		namespace freeExPrep
+		{
+			class Fraction
+			{
+			public:
+				Fraction(int num, int denom)
+					: numerator(num), denominator(denom)
+				{}
+
+				Fraction& operator=(const Fraction& rhs)
+				{
+					numerator = rhs.numerator;
+					denominator = rhs.denominator;
+					return *this;
+				}
+
+				void displayFraction(Fraction f)
+				{
+					cout << f.numerator << " / " << f.denominator << endl;
+				}
+
+			private:
+				int numerator = 0;
+				int denominator = 1;
+			};
+
+			int main()
+			{
+				Fraction f1(1, 3);
+				Fraction f2(2, 5);
+
+				return 0;
+			}
+		}
+
+		namespace freeEx
+		{
+			class Fraction
+			{
+			public:
+				Fraction(int num, int denom)
+					: numerator(num), denominator(denom)
+				{}
+
+				explicit Fraction(int num) : Fraction(num, 1) {}
+
+				Fraction& operator=(const Fraction& rhs)
+				{
+					numerator = rhs.numerator;
+					denominator = rhs.denominator;
+					return *this;
+				}
+
+				Fraction operator+(const Fraction& other) const
+				{
+					int newNumerator = this->numerator * other.denominator
+						+ this->denominator * other.numerator;
+					int newDinomenator = this->denominator * other.denominator;
+
+					return Fraction(newNumerator, newDinomenator);
+				}
+
+				Fraction operator+(const int& other) const
+				{
+					Fraction f(other, 1);
+					return this->operator+(f);
+				}
+
+				friend Fraction operator+(const int& lhs, const Fraction& rhs);
+				friend ostream& operator<<(ostream& cout, const Fraction& rhs);
+
+				explicit operator double()
+				{
+					return (double)numerator / denominator;
+				}
+
+			private:
+				int numerator = 0;
+				int denominator = 1;
+			};
 
 			void displayFraction(Fraction f)
 			{
-				cout << f.numerator << " / " << f.denominator << endl;
+				cout << f << endl;
 			}
 
-		private:
-			int numerator = 0;
-			int denominator = 1;
-		};
-
-		int main()
-		{
-			Fraction f1(1, 3);
-			Fraction f2(2, 5);
-
-			return 0;
-		}
-	}
-
-	namespace freeEx
-	{
-		class Fraction
-		{
-		public:
-			Fraction(int num, int denom)
-				: numerator(num), denominator(denom)
-			{}
-
-			explicit Fraction (int num) : Fraction(num, 1) {}
-
-			Fraction& operator=(const Fraction& rhs)
+			Fraction operator+(const int& lhs, const Fraction& rhs)
 			{
-				numerator = rhs.numerator;
-				denominator = rhs.denominator;
-				return *this;
-			}
-
-			Fraction operator+(const Fraction& other) const
-			{
-				int newNumerator = this->numerator * other.denominator
-					+ this->denominator * other.numerator;
-				int newDinomenator = this->denominator * other.denominator;
+				int newNumerator = lhs * rhs.denominator + rhs.numerator;
+				int newDinomenator = rhs.denominator;
 
 				return Fraction(newNumerator, newDinomenator);
 			}
 
-			Fraction operator+(const int& other) const
+			ostream& operator<<(ostream& cout, const Fraction& rhs)
 			{
-				Fraction f(other, 1);
-				return this->operator+(f);
+				cout << rhs.numerator << " / " << rhs.denominator;
+				return cout;
 			}
 
-			friend Fraction operator+(const int& lhs, const Fraction& rhs);
-			friend ostream& operator<<(ostream& cout, const Fraction& rhs);
-
-			explicit operator double()
+			int main()
 			{
-				return (double)numerator / denominator;
+				Fraction f1(1, 2);
+				Fraction f2(3, 4);
+				Fraction f3 = (Fraction)2;
+
+				f2 = f1 + f3;
+				f2 = f1 + 4;
+				f2 = 3 + f1;
+
+				displayFraction(f2);
+				displayFraction((Fraction)20);
+
+				return 0;
 			}
-
-		private:
-			int numerator = 0;
-			int denominator = 1;
-		};
-
-		void displayFraction(Fraction f)
-		{
-			cout << f << endl;
 		}
+	} // namespace Le13
 
-		Fraction operator+(const int& lhs, const Fraction& rhs)
-		{
-			int newNumerator = lhs * rhs.denominator + rhs.numerator;
-			int newDinomenator = rhs.denominator;
+}; // namespace past
 
-			return Fraction(newNumerator, newDinomenator);
-		}
+namespace Lec14
+{
 
-		ostream& operator<<(ostream& cout, const Fraction& rhs)
-		{
-			cout << rhs.numerator << " / " << rhs.denominator;
-			return cout;
-		}
-
-		int main()
-		{
-			Fraction f1(1, 2);
-			Fraction f2(3, 4);
-			Fraction f3 = (Fraction)2;
-
-			f2 = f1 + f3;
-			f2 = f1 + 4;
-			f2 = 3 + f1;
-
-			displayFraction(f2);
-			displayFraction((Fraction)20);
-
-			return 0;
-		}
-	}
-} // namespace Le13
+}
 
 int main()
 {
-	Lec13::freeEx::main();
+	past::Lec13::freeEx::main();
 	return 0;
 }
