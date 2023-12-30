@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <list>
+#include <fstream>
+//#include <stdexcept>
 using namespace std;
 
 void doSomeOtherWorkThatNeedsBigAmuontOfMemory()
@@ -1503,11 +1505,276 @@ namespace past
 
 namespace Lec14
 {
+	namespace Ex1
+	{
+		void processFile(const string& filename)
+		{
+			ifstream file;
+			file.exceptions(ifstream::failbit | ifstream::badbit);
 
+			try
+			{
+				cout << "Trying to open the file: " << filename << endl;
+				file.open(filename);
+
+				// Process the file
+				cout << "Processing file..." << endl;
+				// ... file processing logic ...
+
+				file.close();
+				cout << "File processed successfully." << endl;
+			}
+			catch (const ifstream::failure& e)
+			{
+				cout << "Error occurred: " << e.what() << endl;
+				// Handle the file-related error, e.g., by logging it or informing the user
+			}
+		}
+
+		int main()
+		{
+			processFile("example.txt");
+			return 0;
+		}
+
+	}
+
+	namespace Ex2a
+	{
+		const int SIZE = 10;
+
+		int* readDataFromFile(const string& filename)
+		{
+			ifstream file(filename);
+			int* data = new int[SIZE];
+			int value;
+
+			for (int i = 0; i < SIZE; i++)
+			{
+				file >> data[i];
+			}
+
+			return data;
+		}
+
+		double calcAvg(const int* data, const int size)
+		{
+			double sum = 0.0;
+			for (int i = 0; i < size; i++)
+			{
+				sum += data[i];
+			}
+			return sum / size;
+		}
+
+		int main()
+		{
+			int size;
+			int* data = readDataFromFile("input.txt");
+			double average = calcAvg(data, SIZE);
+			cout << "Average: " << average << endl;
+
+			return 0;
+		}
+	} // namespace Ex2a
+
+	namespace Ex2b
+	{
+		const int SIZE = 10;
+
+		int* readDataFromFile(const string& filename)
+		{
+			ifstream file(filename);
+			int* data = new int[SIZE];
+			int value;
+
+			if (!file)
+			{
+				throw string("Failed to open: " + filename);
+			}
+
+			for (int i = 0; i < SIZE; i++)
+			{
+				file >> data[i];
+			}
+
+			return data;
+		}
+
+		double calcAvg(const int* data, const int size)
+		{
+			double sum = 0.0;
+			for (int i = 0; i < size; i++)
+			{
+				sum += data[i];
+			}
+			return sum / size;
+		}
+
+		int main()
+		{
+			try
+			{
+				int size;
+				int* data = readDataFromFile("input.txt");
+				double average = calcAvg(data, SIZE);
+				cout << "Average: " << average << endl;
+			}
+			catch (const string& errorMessage)
+			{
+				cout << "Error: " << errorMessage << endl;
+			}
+
+			return 0;
+		}
+	} // namespace Ex2b
+
+	namespace Ex3
+	{
+		void checkBookAvailability(int position, int catalogSize)
+		{
+			if (position < 0 || position >= catalogSize)
+			{
+				throw out_of_range("Invalid catalog position");
+			}
+		}
+
+		int getBookIDAtIndex(int* bookIDs, int catalogSize, int position)
+		{
+			return bookIDs[position];
+		}
+
+		int main()
+		{
+			const int CATALOG_SIZE = 10;
+			int bookIDs[CATALOG_SIZE] = { 101, 102, 103, 104, 105, 106, 107, 108, 109, 110 };
+			int position;
+
+			cout << "Enter the catalog position to query the book ID: ";
+			cin >> position;
+
+			//try
+			//{
+			int bookID = getBookIDAtIndex(bookIDs, CATALOG_SIZE, position);
+			cout << "Book ID at position " << position << ": " << bookID << endl;
+			//}
+			//catch (const out_of_range& e)
+			//{
+			//	cerr << "Error: " << e.what() << endl;
+			//	// Logic to handle invalid position, e.g., asking user to re-enter the position
+			//}
+
+			return 0;
+		}
+	}
+
+	namespace Ex4
+	{
+		int F1(), F2(), F3();
+
+		int main()
+		{
+			try
+			{
+				cout << F1() << endl;
+			}
+			catch (int e)
+			{
+				cout << "You are in the main function." << endl;
+				cout << "Exception: " << e << endl;
+			}
+			catch (string e)
+			{
+				cout << "You are in the main function." << endl;
+				cout << "Exception: " << e << endl;
+			}
+
+			return 0;
+		}
+
+		int F1()
+		{
+			F2();
+			return 1;
+		}
+
+		int F2()
+		{
+			F3();
+			return 2;
+		}
+
+		int F3()
+		{
+			throw string("Error in F3()");
+			return 3;
+		}
+	} // namespace Ex4
+
+	namespace Ex5
+	{
+		int F1(), F2(), F3();
+
+		int main()
+		{
+			try
+			{
+				cout << F1() << endl;
+			}
+			catch (int e)
+			{
+				cout << "You are in the main function." << endl;
+				cout << "Exception: " << e << endl;
+			}
+			catch (string e)
+			{
+				cout << "You are in the main function." << endl;
+				cout << "Exception: " << e << endl;
+			}
+
+			return 0;
+		}
+
+		int F1()
+		{
+			try
+			{
+				F2();
+			}
+			catch (string e)
+			{
+				cout << "You are in F1()." << endl;
+				cout << "Exception: " << e << endl;
+				throw string("Error in F1()");
+			}
+			return 1;
+		}
+
+		int F2()
+		{
+			try
+			{
+				F3();
+			}
+			catch (string e)
+			{
+				cout << "You are in F2()." << endl;
+				cout << "Exception: " << e << endl;
+				throw;
+			}
+			return 2;
+		}
+
+		int F3()
+		{
+			throw string("Error in F3()");
+			return 3;
+		}
+	} // namespace Ex5
 }
 
 int main()
 {
-	past::Lec13::freeEx::main();
+	Lec14::Ex5::main();
 	return 0;
 }
