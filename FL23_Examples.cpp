@@ -1546,8 +1546,13 @@ namespace Lec14
 		int* readDataFromFile(const string& filename)
 		{
 			ifstream file(filename);
+
+			if (!file)
+			{
+				throw(string("File not found:" + filename));
+			}
+
 			int* data = new int[SIZE];
-			int value;
 
 			for (int i = 0; i < SIZE; i++)
 			{
@@ -1569,10 +1574,20 @@ namespace Lec14
 
 		int main()
 		{
-			int size;
-			int* data = readDataFromFile("input.txt");
-			double average = calcAvg(data, SIZE);
-			cout << "Average: " << average << endl;
+			int* data = nullptr;
+			try
+			{
+				data = readDataFromFile("counts.txt");
+
+				double average = calcAvg(data, SIZE);
+				cout << "Average: " << average << endl;
+			}
+			catch (string e)
+			{
+				cout << "Error: " << e;
+			}
+
+			cout << "Ending the test function" << endl;
 
 			return 0;
 		}
